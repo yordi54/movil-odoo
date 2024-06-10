@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
+import 'package:movil_odoo/controllers/auth.controller.dart';
+import 'package:movil_odoo/router.dart';
 void main() {
   runApp(const MainApp());
 }
@@ -9,12 +11,18 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
+    return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'MainApp',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
       ),
+      initialRoute: AppRoutes.home,
+      getPages: AppRoutes.routes,
+      initialBinding: BindingsBuilder(() {
+        // Inicializar el AuthController 
+        Get.put(AuthController());
+      }),
     );
   }
 }
