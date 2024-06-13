@@ -1,0 +1,1 @@
+{"flutter":{"platforms":{"android":{"default":{"projectId":"movil-odoo","appId":"1:681575209619:android:b75cf93a3b97ddb7dacb66","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"movil-odoo","configurations":{"android":"1:681575209619:android:b75cf93a3b97ddb7dacb66","ios":"1:681575209619:ios:47b115e45f31f62edacb66"}}}}}}

@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 
 class AttendanceService {
-  static const String _baseUrl = 'http://192.168.0.10:3000/api';
+  static const String _baseUrl = 'https://backend-odoo-production.up.railway.app/api';
 
   static Future<Map<String, dynamic>> getAttendance(int id , String password, int registerAttendanceId) async  {
     try{

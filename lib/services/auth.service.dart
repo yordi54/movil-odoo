@@ -3,7 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 class AuthService {
-  static const String _baseUrl = 'http://192.168.0.10:3000/api';
+  static const String _baseUrl = 'https://backend-odoo-production.up.railway.app/api';
 
   static Future<Map<String, dynamic>> login(String email, String password) async {
     try{

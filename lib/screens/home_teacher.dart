@@ -42,16 +42,7 @@ class _HomePageTeacherState extends State<HomePageTeacher> {
           children: [
             Text('Bienvenido ${username()}' , style: const TextStyle(fontSize: 24)),
             const SizedBox(height: 16),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
-              ),
-              onPressed: () {
-                _authController.logout();
-              },
-              child: const Text('Cerrar sesión', style: TextStyle(color: Colors.white, fontSize: 16),),
-            ),
+            
           ],
         ),
       ),
