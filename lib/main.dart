@@ -17,7 +17,7 @@ class MainApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: AppRoutes.home,
+      initialRoute: AppRoutes.login,
       getPages: AppRoutes.routes,
       initialBinding: BindingsBuilder(() {
         // Inicializar el AuthController 

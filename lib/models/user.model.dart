@@ -4,6 +4,7 @@ class User {
   final List<dynamic> companyIds;
   final String completeName;
   final String image1920;
+  final String? password;
 
 
   User({
@@ -12,6 +13,7 @@ class User {
     required this.companyIds,
     required this.completeName,
     required this.image1920,
+    this.password,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {

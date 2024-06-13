@@ -12,7 +12,7 @@ class HomePage extends StatelessWidget {
   //function obtener usuario string
   String username() {
     //concaternar el nombre y apellido
-    return _authController.user.value!.completeName ;
+    return _authController.user.value?.completeName ?? '' ;
     
   }
 
@@ -23,7 +23,7 @@ class HomePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Bienvenido ${username()}' , style: const TextStyle(fontSize: 24)),
+            Text('Bienvenido ${username() }' , style: const TextStyle(fontSize: 24)),
             const SizedBox(height: 16),
             ElevatedButton(
               style: ElevatedButton.styleFrom(

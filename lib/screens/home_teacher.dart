@@ -4,10 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:movil_odoo/controllers/auth.controller.dart';
-class HomePageTeacher extends StatelessWidget {
-  final AuthController _authController = Get.find();
+import 'package:movil_odoo/screens/sidebar_menu.dart';
+class HomePageTeacher extends StatefulWidget {
 
-  HomePageTeacher({super.key});
+  const HomePageTeacher({super.key});
+
+  @override
+  State<HomePageTeacher> createState() => _HomePageTeacherState();
+}
+
+class _HomePageTeacherState extends State<HomePageTeacher> {
+  final AuthController _authController = Get.find();
 
   //function obtener usuario string
   String username() {
@@ -18,6 +25,17 @@ class HomePageTeacher extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const SideBarMenu(),
+      appBar: AppBar(
+        title: const Text('Home'),
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          ),
+        )
+      ),
+
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

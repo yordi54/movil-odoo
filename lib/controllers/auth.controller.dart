@@ -10,11 +10,11 @@ class AuthController extends GetxController {
   var user = Rxn<User>();
   var isLoading = false.obs;
 
-  @override
+  /* @override
   void onInit() {
     super.onInit();
-    checkLoginStatus();
-  }
+    //checkLoginStatus();
+  } */
 
   void login(String email, String password) async {
     try {
@@ -26,6 +26,9 @@ class AuthController extends GetxController {
         // ignore: avoid_print
         print(userResponse['result'][0]);
         user.value = User.fromJson(userResponse['result'][0]);
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('llave', password);
+        prefs.setInt('id', id);
         isLoggedIn(true);
         if (user.value!.employeeIds.isNotEmpty) {
           Get.offAllNamed(AppRoutes.homeTeacher);
