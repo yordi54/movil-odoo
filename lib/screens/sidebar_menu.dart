@@ -1,31 +1,16 @@
-import 'dart:convert';
-import 'dart:typed_data';
+
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:movil_odoo/controllers/auth.controller.dart';
+
 class SideBarMenu extends StatelessWidget {
   const SideBarMenu({super.key});
-
-  Widget userImage(String? photo){
-    if(photo != null && photo.isNotEmpty){
-      Uint8List bytes = base64Decode(photo);
-      return CircleAvatar(
-        radius: 40,
-        backgroundImage: MemoryImage(bytes),
-      );
-    }else{
-      return const CircleAvatar(
-        radius: 40,
-        child: Icon(Icons.account_circle, size: 80, color: Colors.grey),
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     final AuthController authController = Get.find();
-    final user = authController.user.value!;
+    final user = authController.userEmployee.value!;
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -35,15 +20,19 @@ class SideBarMenu extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Center(child: userImage(user.image1920)),
+                  const Center(
+                      child: CircleAvatar(
+                    radius: 40,
+                    child: Icon(Icons.account_circle,
+                        size: 80, color: Colors.grey),
+                  )),
                   const SizedBox(height: 16),
                   Text(
-                    user.completeName,
+                    user.name,
                     style: const TextStyle(color: Colors.white, fontSize: 18),
                   ),
                 ],
-              )
-             ),
+              )),
           ListTile(
             leading: const Icon(Icons.app_registration_sharp),
             title: const Text('Registros Asistencias'),
@@ -66,7 +55,6 @@ class SideBarMenu extends StatelessWidget {
               authController.logout();
             },
           ),
-          
         ],
       ),
     );

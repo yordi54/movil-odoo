@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:movil_odoo/controllers/register_attendance.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:developer';
 
 class AttendanceScreen extends StatefulWidget {
   const AttendanceScreen({super.key});
@@ -29,13 +28,12 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
         final int id = prefs.getInt('id') ?? 0;
         _registerAttendanceController.getRegisterAttendance(
             id, password, int.parse(gradeId!));
+
       },
     );
   }
 
-  bool isAttendanceId() {
-    return _registerAttendanceController.attendance.value!.isEmpty;
-  }
+  
 
   //imagen base64
   Widget userImage(String? photo) {
@@ -57,359 +55,205 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Registro de Asistencia'),
+        title: const Text('Registro de Asistencia', style: TextStyle(color: Colors.white)),
+        elevation: 4.0,
+        backgroundColor: Colors.teal,
       ),
       body: Obx(() {
-        if (_registerAttendanceController.attendance.value == null) {
+        if (_registerAttendanceController.registerAttendance.value == null) {
           return const Center(
             child: CircularProgressIndicator(),
           );
         } else {
-          if (isAttendanceId()) {
-            return Center(
-              child: Column(
-                children: [
-                  const Text('No hay asistencias registradas'),
-                  //boton
-                  MaterialButton(
-                      color: Colors.blue,
+          if (_registerAttendanceController.registerAttendance.value!.isEmpty) {
+            return  Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.warning,
+                      color: Colors.red,
+                      size: 50.0,
+                    ),
+                    Text(
+                      'No hay registros de asistencia',
+                      style:   TextStyle(fontSize: 20.0, color: Colors.red),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  
+                  children: [
+                    MaterialButton(
                       padding: const EdgeInsets.all(16.0),
-                      textColor: Colors.white,
+                      color: Colors.green,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: const Text('Crear Lista de Asistencia'),
-                      onPressed: () {
-                        SharedPreferences.getInstance().then(
-                          (prefs) {
-                            final String password =
-                                prefs.getString('llave') ?? '';
-                            final int id = prefs.getInt('id') ?? 0;
-                            _registerAttendanceController
-                                .createRegisterAttendance(
-                                    id, password, int.parse(gradeId!));
-                          },
-                        );
-                      })
-                ],
-              ),
+                          borderRadius: BorderRadius.circular(10.0)),
+                      onPressed: () async {},
+                      child:  const Text('Crear Registro de Asistencia',
+                          style: TextStyle(color: Colors.white)),
+                    )
+                  ],
+                ),
+              ],
             );
           }
         }
+        //mostrar cabezera datos de registros de asistencia
         return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
-              child: Container(
-                  width: context.width,
-                  color: Colors.blueAccent[100],
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          MaterialButton(
-                            padding: const EdgeInsets.all(16.0),
-                            color: Colors.green,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0)),
-                            onPressed: () async {
-                              final imagePicker = ImagePicker();
-                              final pickedFile = await imagePicker.pickImage(
-                                  source: ImageSource.gallery,
-                                  imageQuality: 20);
-                              if (pickedFile != null) {
-                                File image = File(pickedFile.path);
-                                Uint8List bytes = await image.readAsBytes();
-                                String base64Image = base64Encode(bytes);
-                                SharedPreferences.getInstance().then(
-                                  (prefs) {
-                                    final String password =
-                                        prefs.getString('llave') ?? '';
-                                    final int id = prefs.getInt('id') ?? 0;
-                                    _registerAttendanceController.generateAttendanceIA(
-                                        id,
-                                        password,
-                                        _registerAttendanceController
-                                                .attendance.value![0].id ??
-                                            0,
-                                        base64Image,
-                                        int.parse(gradeId!));
-                                  },
-                                ); 
-                              }
-                            },
-                            child: const Text('Registrar con IA',
-                                style: TextStyle(color: Colors.white)),
-                          ),
-                        ],
-                      ),
-                      const Center(
-                          child: Text('Registro de Asistencias',
-                              style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.bold))),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text('Curso: ',
-                              style: TextStyle(
-                                  fontSize: 16.0, fontWeight: FontWeight.bold)),
-                          Text(
-                              '${_registerAttendanceController.attendance.value![0].gradeId[1] ?? ''}',
-                              style: const TextStyle(fontSize: 16.0)),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text('Fecha: ',
-                              style: TextStyle(
-                                  fontSize: 16.0, fontWeight: FontWeight.bold)),
-                          Text(
-                              _registerAttendanceController
-                                  .attendance.value![0].date,
-                              style: const TextStyle(fontSize: 16.0)),
-                        ],
+            Container(
+              color: Colors.blueAccent[100],
+              width: double.infinity,
+              padding: const EdgeInsets.all(16.0),
+              child:  Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      MaterialButton(
+                        padding: const EdgeInsets.all(16.0),
+                        color: Colors.blueAccent[700],
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0)),
+                        onPressed: ()  async {
+                          await getImage();
+                          
+                        },
+                        child: const Text('Registrar con IA',
+                            style: TextStyle(color: Colors.white)),
                       ),
                     ],
-                  )),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        _registerAttendanceController.registerAttendance.value![0].name.toUpperCase(),
+                        style:  const TextStyle(fontSize: 20.0, color: Colors.white, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height:  4.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Curso: ',
+                        style: TextStyle( color: Colors.white,
+                            fontSize: 16.0, fontWeight: FontWeight.bold,),
+                      ),
+                      Text(
+                        '${_registerAttendanceController.registerAttendance.value![0].gradeId[1] ?? ''}',
+                        style:  const TextStyle(fontSize: 14.0, color: Colors.white),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Fecha: ',
+                        style: TextStyle( color: Colors.white,
+                            fontSize: 16.0, fontWeight: FontWeight.bold,),
+                      ),
+                      Text(
+                        _registerAttendanceController.registerAttendance.value![0].date,
+                        style: const TextStyle(fontSize: 14.0, color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+
             ),
             Expanded(
-              child: Container(
-                  color: Colors.redAccent[100],
-                  padding: const EdgeInsets.all(16.0),
-                  width: context.width,
-                  height: context.height * 0.8,
-                  child: ListView.builder(
-                    itemCount: _registerAttendanceController
-                        .attendance.value![0].attendances.length,
-                    itemBuilder: (context, index) {
-                      return Card(
-                        color: Colors.greenAccent[100],
-                        elevation: 4.0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        child: Container(
-                          padding: const EdgeInsets.all(16.0),
-                          width: 300.0,
+              child: ListView.builder(
+                itemCount: _registerAttendanceController.registerAttendance.value![0].attendances.length,
+                itemBuilder: (context, index) {
+                  return  Card(
+                    color: Colors.greenAccent[100],
+                    margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        children: [
+                        userImage(_registerAttendanceController.registerAttendance.value![0].attendances[index].studentId[2]),
+                         const SizedBox(width: 16.0),
+                         Expanded(
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  PopupMenuButton(
-                                    onSelected: (String result) {
-                                      setState(() {
-                                        if (result == 'attended') {
-                                          SharedPreferences.getInstance().then(
-                                            (prefs) {
-                                              final String password =
-                                                  prefs.getString('llave') ??
-                                                      '';
-                                              final int id =
-                                                  prefs.getInt('id') ?? 0;
-                                              _registerAttendanceController
-                                                  .updateRegisterAttendance(
-                                                      id,
-                                                      password,
-                                                      _registerAttendanceController
-                                                              .attendance
-                                                              .value![0]
-                                                              .attendances[
-                                                                  index]
-                                                              .id ??
-                                                          0,
-                                                      true,
-                                                      false,
-                                                      false);
-                                            },
-                                          );
-                                          // Lógica para editar
-                                        } else if (result == 'missing') {
-                                          SharedPreferences.getInstance().then(
-                                            (prefs) {
-                                              final String password =
-                                                  prefs.getString('llave') ??
-                                                      '';
-                                              final int id =
-                                                  prefs.getInt('id') ?? 0;
-                                              _registerAttendanceController
-                                                  .updateRegisterAttendance(
-                                                      id,
-                                                      password,
-                                                      _registerAttendanceController
-                                                              .attendance
-                                                              .value![0]
-                                                              .attendances[
-                                                                  index]
-                                                              .id ??
-                                                          0,
-                                                      false,
-                                                      false,
-                                                      true);
-                                            },
-                                          );
-                                        } else if (result == 'leave') {
-                                          // Lógica para eliminar
-                                          SharedPreferences.getInstance().then(
-                                            (prefs) {
-                                              final String password =
-                                                  prefs.getString('llave') ??
-                                                      '';
-                                              final int id =
-                                                  prefs.getInt('id') ?? 0;
-                                              _registerAttendanceController
-                                                  .updateRegisterAttendance(
-                                                      id,
-                                                      password,
-                                                      _registerAttendanceController
-                                                              .attendance
-                                                              .value![0]
-                                                              .attendances[
-                                                                  index]
-                                                              .id ??
-                                                          0,
-                                                      false,
-                                                      true,
-                                                      false);
-                                            },
-                                          );
-                                        }
-                                      });
-                                    },
-                                    itemBuilder: (BuildContext context) =>
-                                        <PopupMenuEntry<String>>[
-                                      const PopupMenuItem<String>(
-                                        value: 'attended',
-                                        child: Text('Asistio'),
-                                      ),
-                                      const PopupMenuItem<String>(
-                                        value: 'missing',
-                                        child: Text('Falto'),
-                                      ),
-                                      const PopupMenuItem<String>(
-                                        value: 'leave',
-                                        child: Text('Licencia'),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              Center(
-                                  child: userImage(_registerAttendanceController
-                                          .attendance
-                                          .value![0]
-                                          .attendances[index]
-                                          .studentId[2] ??
-                                      '')),
-                              const SizedBox(height: 16.0),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'Nombre: ',
-                                    style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                      _registerAttendanceController
-                                              .attendance
-                                              .value![0]
-                                              .attendances[index]
-                                              .studentId[1] ??
-                                          '',
-                                      style: const TextStyle(fontSize: 16.0)),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'Asistencia: ',
-                                    style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                      _registerAttendanceController
-                                              .attendance
-                                              .value![0]
-                                              .attendances[index]
-                                              .attended
-                                          ? 'Asistio'
-                                          : 'Ninguno',
-                                      style: const TextStyle(fontSize: 16.0)),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'Falta: ',
-                                    style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                      _registerAttendanceController
-                                              .attendance
-                                              .value![0]
-                                              .attendances[index]
-                                              .missing
-                                          ? 'Falto'
-                                          : 'Ninguno',
-                                      style: const TextStyle(fontSize: 16.0)),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'Licencia: ',
-                                    style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                      _registerAttendanceController
-                                              .attendance
-                                              .value![0]
-                                              .attendances[index]
-                                              .leave
-                                          ? 'Licencia'
-                                          : 'Ninguno',
-                                      style: const TextStyle(fontSize: 16.0)),
-                                ],
-                              ),
+                            children: [
+                              Text(_registerAttendanceController.registerAttendance.value![0].attendances[index].studentId[1] ,style: const TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                            ),),
+                            const SizedBox(height: 6.0),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.check_circle,
+                                  color: _registerAttendanceController.registerAttendance.value![0].attendances[index].attended ? Colors.green : Colors.grey,
+                                ),
+                                const SizedBox(width: 4.0),
+                                Icon(
+                                  Icons.cancel,
+                                  color: _registerAttendanceController.registerAttendance.value![0].attendances[index].missing ? Colors.red : Colors.grey,
+                                ),
+                                const SizedBox(width: 4.0),
+                                Icon(
+                                  Icons.remove_circle,
+                                  color: _registerAttendanceController.registerAttendance.value![0].attendances[index].leave ? Colors.blue : Colors.grey,
+                                ),
+                              ],
+                            )
                             ],
                           ),
-                        ),
-                      );
-                    },
-                  )),
+                         )
+                        ],
+                      ),
+                    ),
+
+                  );
+                },
+              )
             )
           ],
         );
-      }),
+        
+  }),
     );
   }
 
+
+  
   /* image ppicker */
   Future getImage() async {
     final imagePicker = ImagePicker();
     final pickedFile = await imagePicker.pickImage(
         source: ImageSource.gallery, imageQuality: 20);
 
+    ///la file para enviar al servidor, sin base64
     if (pickedFile != null) {
-      File image = File(pickedFile.path);
-      Uint8List bytes = await image.readAsBytes();
-      final String base64Image = base64Encode(bytes);
-      log(base64Image);
+      final File file = File(pickedFile.path);
+      //traer id de shared preferences
+      SharedPreferences.getInstance().then(
+        (prefs) {
+          final String password = prefs.getString('llave') ?? '';
+          final int id = prefs.getInt('id') ?? 0;
+          _registerAttendanceController.generateAttendanceIA(id, password, _registerAttendanceController.registerAttendance.value![0].id, file);
+        },
+      );
+       
     }
   }
+
+
 }

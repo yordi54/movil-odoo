@@ -1,5 +1,5 @@
 class Employee {
-  final int? id;
+  final int id;
   final String name;
   final List<dynamic> scheduleIds;
   final List<dynamic> departmentId;
@@ -8,7 +8,7 @@ class Employee {
   final String? workEmail;
 
   Employee({
-    this.id,
+    required this.id,
     required this.name,
     required this.scheduleIds,
     required this.departmentId,

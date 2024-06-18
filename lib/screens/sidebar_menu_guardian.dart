@@ -1,5 +1,4 @@
-import 'dart:convert';
-import 'dart:typed_data';
+
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,25 +6,11 @@ import 'package:movil_odoo/controllers/auth.controller.dart';
 class SideBarMenuGuardian extends StatelessWidget {
   const SideBarMenuGuardian({super.key});
 
-  Widget userImage(String? photo){
-    if(photo != null && photo.isNotEmpty){
-      Uint8List bytes = base64Decode(photo);
-      return CircleAvatar(
-        radius: 40,
-        backgroundImage: MemoryImage(bytes),
-      );
-    }else{
-      return const CircleAvatar(
-        radius: 40,
-        child: Icon(Icons.account_circle, size: 80, color: Colors.grey),
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     final AuthController authController = Get.find();
-    final user = authController.user.value!;
+    final user = authController.userGuardian.value!;
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -35,11 +20,16 @@ class SideBarMenuGuardian extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Center(child: userImage(user.image1920)),
+                 const Center(
+                      child: CircleAvatar(
+                    radius: 40,
+                    child: Icon(Icons.account_circle,
+                        size: 80, color: Colors.grey),
+                  )),
                   const SizedBox(height: 16),
                   Center(
                     child: Text(
-                      user.completeName,
+                      '${user.name} ${user.lastname}',
                       style: const TextStyle(color: Colors.white, fontSize: 18),
                     ),
                   ),
@@ -50,14 +40,14 @@ class SideBarMenuGuardian extends StatelessWidget {
             leading: const Icon(Icons.announcement),
             title: const Text('Comunicados'),
             onTap: () {
-             // Get.toNamed('/attendance');
+              Get.toNamed('/announcement');
             },
           ),
           ListTile(
             leading: const Icon(Icons.note),
             title: const Text('Notas de mi hijo/a'),
             onTap: () {
-              //Get.toNamed('/schedule');
+              Get.toNamed('/nota');
             },
           ),
           /* al final ,  poner salir */

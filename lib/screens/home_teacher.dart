@@ -18,7 +18,7 @@ class _HomePageTeacherState extends State<HomePageTeacher> {
 
   //function obtener usuario string
   String username() {
-    return '${_authController.user.value!.completeName} | Teacher' ;
+    return '${_authController.userEmployee.value!.name} ' ;
 
   }
 
@@ -27,7 +27,9 @@ class _HomePageTeacherState extends State<HomePageTeacher> {
     return Scaffold(
       drawer: const SideBarMenu(),
       appBar: AppBar(
-        title: const Text('Home'),
+        title: const Text('Home', style: TextStyle(color: Colors.white)),
+        elevation: 4.0,
+        backgroundColor: Colors.teal ,
         leading: Builder(
           builder: (context) => IconButton(
             icon: const Icon(Icons.menu),
@@ -40,8 +42,7 @@ class _HomePageTeacherState extends State<HomePageTeacher> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Bienvenido ${username()}' , style: const TextStyle(fontSize: 24)),
-            const SizedBox(height: 16),
+            Text('Bienvenido ${username()}' , style: const TextStyle(fontSize: 24 ), textAlign:  TextAlign.center),
             
           ],
         ),

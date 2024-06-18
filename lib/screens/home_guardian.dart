@@ -12,7 +12,7 @@ class HomePageGuardian extends StatelessWidget {
 
   //function obtener usuario string
   String username() {
-    return '${_authController.user.value!.completeName} | Guardian' ;
+    return '${_authController.userGuardian.value!.name} ${_authController.userGuardian.value!.lastname} ' ;
   }
 
   @override
@@ -20,7 +20,9 @@ class HomePageGuardian extends StatelessWidget {
     return Scaffold(
       drawer: const SideBarMenuGuardian(),
       appBar: AppBar(
-        title: const Text('Home'),
+        elevation: 4.0,
+        backgroundColor: Colors.teal ,
+        title: const Text('Home', style: TextStyle(color: Colors.white)),
         leading: Builder(
           builder: (context) => IconButton(
             icon: const Icon(Icons.menu),
@@ -28,6 +30,15 @@ class HomePageGuardian extends StatelessWidget {
           ),
         )
       ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Bienvenido, ${username()}' , style: const TextStyle(fontSize: 24 ), textAlign:  TextAlign.center),
+            
+          ],
+        ),
+      )
       
     );
   }

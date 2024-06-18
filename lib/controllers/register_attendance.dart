@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:get/get.dart';
+import 'package:movil_odoo/models/attendance.model.dart';
 import 'package:movil_odoo/models/register_attendance.model.dart';
 import 'package:movil_odoo/services/register_attendance.service.dart';
 
 class RegisterAttendanceController extends GetxController {
-  var attendance = Rxn<List<RegisterAttendance>>();
+  var registerAttendance = Rxn<List<RegisterAttendance>>();
+  var attendance = Rxn<List<Attendance>>();
 
   void createRegisterAttendance(int id, String password, int gradeId) async {
     try {
@@ -27,11 +31,17 @@ class RegisterAttendanceController extends GetxController {
     try {
       final response = await RegisterAttendanceService.getRegisterAttendance(id, password, gradeId);
       if (response['result'] != false) {
-        List<RegisterAttendance> attendanceList = [];
-        for (var attendance in response['result']) {
-          attendanceList.add(RegisterAttendance.fromJson(attendance));
+        ///insertar solo el index 0 de la lista de asistencias
+        ///para que no se duplique la lista
+        if(response['result']['register_attendance'].length > 0 && response['result']['attendances'].length > 0){
+          //añadir al register su lista de asistencias
+          List<RegisterAttendance> registerAttendanceList = [];
+          registerAttendanceList.add(RegisterAttendance.fromJson(response['result']));
+          registerAttendance(registerAttendanceList);
+        }else{
+          registerAttendance([]);
         }
-        attendance(attendanceList);
+
       } else {
         throw Exception('Failed to get register attendance');
       }
@@ -40,7 +50,29 @@ class RegisterAttendanceController extends GetxController {
     }
   }
 
-  void updateRegisterAttendance(int id, String password, int attendanceId, bool attended, bool leave, bool missing) async {
+
+  Future<void> getAttendance(int id, String password, int registerAttendanceId ) async{
+    try {
+      final response = await RegisterAttendanceService.getAttendance(id, password, registerAttendanceId);
+      if (response['result'] != false) {
+        //actualizar la lista de asistencias para que se refleje el cambio sin que el usuario tenga que recargar la pagina
+        if(response['result'].length > 0){
+          //añadir la lista de asistencias a la variable attendance toda la lista
+          attendance(response['result'].map((item) => Attendance.fromJson(item)).toList());
+
+        }else {
+          attendance([]);
+        }
+      }else{
+        throw Exception('Failed to get attendance');
+      }
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), snackPosition: SnackPosition.BOTTOM);
+    }
+
+  }
+
+  /* void updateRegisterAttendance(int id, String password, int attendanceId, bool attended, bool leave, bool missing) async {
     try {
       final response = await RegisterAttendanceService.updateAttendanceStudent(id, password, attendanceId, attended, leave, missing);
       if (response['result'] != false) {
@@ -55,13 +87,11 @@ class RegisterAttendanceController extends GetxController {
     } catch (e) {
       Get.snackbar('Error', e.toString(), snackPosition: SnackPosition.BOTTOM);
     }
-  }
+  } */
 
-  void generateAttendanceIA(int id, String password, int registerAttendanceId, String photo, int gradeId) async {
+   /*void generateAttendanceIA(int id, String password, int registerAttendanceId, String photo, int gradeId) async {
     try {
-      print('id: $id, password: $password, registerAttendanceId: $registerAttendanceId, photo: $photo');
       final response = await RegisterAttendanceService.generateAttendanceIA(id, password, registerAttendanceId, photo);
-      print(response);
       if (response['result'] != false) {
         //actualizar la lista de asistencias para que se refleje el cambio sin que el usuario tenga que recargar la pagina
         getRegisterAttendance(id, password, gradeId);
@@ -74,5 +104,20 @@ class RegisterAttendanceController extends GetxController {
     } catch (e) {
       Get.snackbar('Error', e.toString(), snackPosition: SnackPosition.BOTTOM);
     }
-  }
+  } */
+
+ void generateAttendanceIA( int id, String password, int registerAttendanceId, File photo) async {
+    try {
+      final response = await RegisterAttendanceService.generateAttendanceIA(id, password, registerAttendanceId, photo);
+      if( response['result'] != false){
+        Get.back();
+        Get.snackbar('Success', 'Se genero la asistencia correctamente', snackPosition: SnackPosition.BOTTOM);
+
+        //getRegisterAttendance(id, password, registerAttendanceId);
+      }
+    } catch (e) {
+      Get.snackbar('Error', e.toString(), snackPosition: SnackPosition.BOTTOM);
+    }
+
+ }
 }

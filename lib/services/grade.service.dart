@@ -4,17 +4,18 @@ import 'dart:convert';
 class GradeService {
     static const String _baseUrl = 'https://backend-odoo-production.up.railway.app/api';
 
-  static Future<Map<String, dynamic>> getGrades(int id , String password) async {
+  static Future<Map<String, dynamic>> getGrades(int id , String password, int teacherId) async {
 
     try {
       final response = await http.post(
-        Uri.parse('$_baseUrl/employee/grades'),
+        Uri.parse('$_baseUrl/register-attendance/get-grades'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(<String, dynamic>{
           'id': id,
           'password': password,
+          'teacher_id': teacherId
         }),
       );
       if(response.statusCode == 201){

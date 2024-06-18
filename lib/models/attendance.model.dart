@@ -1,13 +1,13 @@
 
 class Attendance{
-  final int ? id;
+  final int id;
   final bool attended;
   final bool leave;
   final bool missing;
   final List<dynamic> studentId;
 
   Attendance({
-    this.id,
+    required this.id,
     required this.attended,
     required this.leave,
     required this.missing,
